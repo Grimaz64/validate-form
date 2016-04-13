@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<title>EXAMPLE VALIDATE FORM</title>
+	<meta name="description" content="EXAMPLE VALIDATE FORM" />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+
+	<style>
+		html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		form {
+			margin: 50px;
+			padding: 50px;
+		}
+
+		.error-validation {
+
+		}
+		.error {
+			color: red !important;
+		}
+		input.error,
+		select.error,
+		textarea.error {
+			outline: 1px solid red;
+		}
+	</style>
+</head>
+<body>
+	Pour soumettre en ajax, modifier la source et mettez l'attribut data-ajax à true.
+
+	<form action="" method="POST" data-ajax="true" novalidate="novalidate">
+
+		<label for="title">Select (mettre une valeur à "" pour vérifier attribut required)</label><br />
+		<select required="required" name="title" id="title">
+			<option selected="selected" value="">Civilité</option>
+			<option value="1">M</option>
+			<option value="2">Mme</option>
+			<option value="3">Mlle</option>
+		</select>
+
+		<br /><br />
+
+		<label for="texte">Champs texte avec pattern (pas de chiffre ni de caractère spéciaux)</label><br />
+		<input type="text" placeholder="Texte" pattern="[^\d\~\#\{\(\)\[\]\|\\^\@\°\}\€\¨$\£\¤\%\*\?\;\:\/\!\§\²\+\=]+" required="required" name="texte" id="texte">
+
+		<br /><br />
+
+		<label for="phone">Telephone</label><br />
+		<input type="tel" placeholder="Téléphone" pattern="^[0-9+ ]+$" name="phone" id="phone">
+
+		<br /><br />
+
+		<label for="email">Email</label><br />
+		<input type="email" placeholder="E-mail" required="required" name="email" id="email"><br />
+		<input type="text" placeholder="Confirmation" required="required" name="confirm" id="confirm">
+
+		<br /><br />
+
+		<textarea placeholder="Message" required="required" name="message" id="message"></textarea>
+
+		<br /><br />
+
+		<input type="checkbox" required="required" value="1" name="optin" id="optin"><label for="optin">Cochez ca !</label>
+
+		<br /><br />
+
+		<input type="radio" required="required" value="1" name="radio" id="radio1"><label for="radio1">ca</label>
+		<input type="radio" required="required" value="2" name="radio" id="radio2"><label for="radio2">et ca</label>
+		<input type="radio" required="required" value="3" name="radio" id="radio3"><label for="radio3">et un peu de ca</label>
+
+		<br /><br />
+
+		<input type="submit" value="GO">
+	</form>
+
+	<script src="../../jquery/1.9.1/jquery-1.9.1.min.js"></script>
+	<script src="jquery.validateform.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('form').validateForm();
+
+			$('input, select, textarea').on('error', function() {
+				console.log('error', this);
+			});
+
+			$('form').data('check', function() {
+				console.log("custom check");
+				var form = this;
+				var isValid = true;
+
+				if ($('#confirm').val() !== $('#email').val()) {
+					isValid = false;
+					$('form').data('ValidateForm').applyError($('#confirm')[0]);
+				}
+
+				return isValid;
+			});
+
+			$('form').data('beforesend', function() {
+				console.log("je m'execute avant d'envoyer la requete AJAX");
+			});
+			$('form').data('onerror', function() {
+				console.log("erreur AJAX");
+			});
+			$('form').data('onsuccess', function() {
+				console.log("AJAX success");
+			});
+		});
+	</script>
+</body>
+</html>
